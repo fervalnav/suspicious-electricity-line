@@ -7,6 +7,7 @@
   - [Installation and Execution](#installation-and-execution)
     - [Installation](#installation)
     - [Execution](#execution)
+  - [Explanation](#explanation)
 
 ## General info
 This project aims to detect suspicious electricity lines by analyzing the median of the readings throughout the year and identifying lines that fall outside a predefined threshold relative to the median. The code follows a structured hexagonal architecture.
@@ -40,4 +41,11 @@ docker run -ti suspicious-reading-detector:1.0.0
 Alternatively, you can execute all quickly with: ```sh run.sh```
 
 
+## Explanation
+
+The primary program solely executes the use case for detecting suspicious readings. The module serves as a basic manual dependency injector to retrieve services in singleton instances and inject the required repository based on the filePath provided as a parameter.
+
+The service responsible for calculating the median should ideally reside in a separate domain, such as a statistical domain. However, for the purpose of this example, it has been included in the current domain. The calculated median is stored in memory to avoid redundant calculations.
+
+The repositories have been coded with the assumption that there won't be any issues loading all data into memory. Since this is a simplified example designed for speed, if there is a larger dataset, it may be necessary to refactor the repositories accordingly.
 
