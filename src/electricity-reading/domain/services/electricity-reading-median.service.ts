@@ -1,18 +1,21 @@
 import { Statistic } from "../../../shared/application/statistic";
 import { ElectricityReadingRepository } from "../electricity-reading.repository";
 
+/**
+ * This service probably should be in other domain, but for the sake of the example, I will leave it here
+ */
 export class ElectricityReadingMedianService {
-  private medians: { [ley: number]: number } = {};
+  private mediansByYear: { [key: number]: number } = {};
   constructor(private readonly repository: ElectricityReadingRepository) {}
 
   public getMedianByYear(year: number): number {
-    if (this.medians[year]) {
-      return this.medians[year];
+    if (this.mediansByYear[year]) {
+      return this.mediansByYear[year];
     }
 
     const readings = this.repository.findAllByYear(year);
     const median = Statistic.median(readings.map((r) => r.amount));
-    this.medians[year] = median;
+    this.mediansByYear[year] = median;
     return median;
   }
 }
