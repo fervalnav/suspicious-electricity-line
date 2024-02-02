@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.ts",
   "scripts": {
+    "build": "tsc",
     "dev:csv": "ts-node src/main.ts 2016-readings.csv",
     "dev:xml": "ts-node src/main.ts 2016-readings.xml",
     "test": "jest"
