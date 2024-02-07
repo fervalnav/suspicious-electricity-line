@@ -1,3 +1,4 @@
+import { ElectricityReading } from "../domain/electricity-reading";
 import { ElectricityReadingRepository } from "../domain/electricity-reading.repository";
 import { ElectricityReadingMedianService } from "../domain/services/electricity-reading-median.service";
 import { SuspiciousElectricityReadingService } from "../domain/services/suspicious-electricity-reading.service";
@@ -9,7 +10,7 @@ export class DetectSuspiciousReadingsUseCase {
     private readonly _electricityReadingMedianService: ElectricityReadingMedianService
   ) {}
 
-  execute(): void {
+  execute(mathOperation: "median" | "average"): void {
     console.log(`| Client    \t\t | Month \t | Suspicious \t | Median \t |`);
     console.log(
       ` ----------------------------------------------------------------------- `
@@ -17,9 +18,7 @@ export class DetectSuspiciousReadingsUseCase {
 
     const readings = this._repository.findAll();
     readings.forEach((reading) => {
-      const median = this._electricityReadingMedianService.getMedianByYear(
-        reading.period.year
-      );
+      const median = this.getValue(mathOperation, reading);
 
       if (this._suspiciousReadingService.isSuspicious(reading, median)) {
         console.log(
@@ -27,5 +26,22 @@ export class DetectSuspiciousReadingsUseCase {
         );
       }
     });
+  }
+
+  private getValue(
+    mathOperation: "median" | "average",
+    reading: ElectricityReading
+  ) {
+    if (mathOperation === "median") {
+      return this._electricityReadingMedianService.getMedianByYear(
+        reading.period.year
+      );
+    }
+    if (mathOperation === "average") {
+      return this._electricityReadingMedianService.getAverageByYear(
+        reading.period.year
+      );
+    }
+    return 0;
   }
 }

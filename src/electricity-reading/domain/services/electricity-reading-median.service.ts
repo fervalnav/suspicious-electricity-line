@@ -6,6 +6,7 @@ import { ElectricityReadingRepository } from "../electricity-reading.repository"
  */
 export class ElectricityReadingMedianService {
   private mediansByYear: { [key: number]: number } = {};
+  private averageByYear: { [key: number]: number } = {};
   constructor(private readonly repository: ElectricityReadingRepository) {}
 
   public getMedianByYear(year: number): number {
@@ -16,6 +17,17 @@ export class ElectricityReadingMedianService {
     const readings = this.repository.findAllByYear(year);
     const median = Statistic.median(readings.map((r) => r.amount));
     this.mediansByYear[year] = median;
+    return median;
+  }
+
+  public getAverageByYear(year: number): number {
+    if (this.averageByYear[year]) {
+      return this.averageByYear[year];
+    }
+
+    const readings = this.repository.findAllByYear(year);
+    const median = Statistic.average(readings.map((r) => r.amount));
+    this.averageByYear[year] = median;
     return median;
   }
 }

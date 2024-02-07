@@ -11,4 +11,9 @@ export class Statistic {
     }
     return (values[half - 1] + values[half]) / 2.0;
   }
+
+  static average(values: Array<number>): number {
+    const sum = values.reduce((prev, acum) => prev + acum, 0);
+    return sum / values.length;
+  }
 }
